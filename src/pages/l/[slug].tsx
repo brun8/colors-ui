@@ -4,6 +4,7 @@ import axios from "axios"
 import ColorBanner from 'components/ColorBanner'
 
 type Color = {
+  id: number,
   code: string
 }
 
@@ -24,7 +25,7 @@ export default function ColorList({ list }: ColorListProps) {
       </h1>
       <div className="flex flex-col w-full">
         {list.colors?.map((color) => (
-          <ColorBanner code={color.code} />
+          <ColorBanner key={color.id} code={color.code} />
         ))}
       </div>
     </div>
@@ -34,8 +35,7 @@ export default function ColorList({ list }: ColorListProps) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const {slug} = context.query
 
-  // TODO: search by slug
-  const {data} = await axios.get('http://localhost:3000/lists/1')
+  const {data} = await axios.get(`http://localhost:3000/lists/${slug}`)
 
   return {
     props: {
