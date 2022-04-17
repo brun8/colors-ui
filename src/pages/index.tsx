@@ -1,36 +1,48 @@
 import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import { useRef } from 'react'
 import { GoSearch } from 'react-icons/go'
 
-const Home: NextPage = () => {
-  function parseInput(e: any) {
 
-  }
+const Home: NextPage = () => {
+  const inputRef = useRef<HTMLInputElement>(null!)
+  const router = useRouter()
 
   return (
-    <div className='flex flex-col items-center h-screen p-8 bg-background-200'>
-      <div className='flex flex-col gap-10 items-center'>
-        <h1>
-          Logo
-        </h1>
-        <div className='flex gap-4 justify-around bg-background-100'>
-          <div className='relative'>
-            <input
-              type="text"
-              className='flex-1 px-10 py-2 h-auto bg-transparent border-b-2 outline-0 border-blue-400 focus:border-red-400 transition-colors ease-in-out duration-500'
-              placeholder='page-name'
-              onChange={parseInput}
-            />
-            <GoSearch className='absolute left-2 top-3'/>
-            <button className='border-0 '>
-              clear
-            </button>
-          </div>
-
-          <button className='py-2 px-4 bg-blue-400 text-white rounded-md'>
-            go
-          </button>
+    <div className='flex flex-col items-center h-screen md:p-20 p-12'>
+      <form
+        className='
+          flex flex-col items-center
+          w-full
+          gap-4
+        '
+        onSubmit={(e) => {
+          e.preventDefault()
+          router.push(`${inputRef.current.value}`)
+        }}
+      >
+        <div className='relative mx-auto w-4/5 max-w-lg flex items-center'>
+          <input
+            type="text"
+            className='
+              px-4 py-2
+              border border-gray-300
+              rounded-md bg-gray-100
+              outline-slate-600
+              w-full
+            '
+            ref={inputRef}
+          />
+          <GoSearch className='absolute right-3 text-slate-700'/>
         </div>
-      </div>
+        <button
+          type="submit"
+          className='px-4 py-2 w-4/5 max-w-sm border-slate-800 rounded-md bg-blue-400 text-white font-bold'
+        >
+          go
+        </button>
+      </form>
+
     </div>
   )
 }
