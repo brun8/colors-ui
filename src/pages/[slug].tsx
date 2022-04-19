@@ -94,8 +94,14 @@ export default function ColorList({ list }: ColorListProps) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const {slug} = context.query
 
-  const res = await getList(String(slug))
-  const data = res?.data
+  let res = {}
+  let data
+  try {
+    const res = await getList(String(slug))
+    data = res.data
+  } catch {
+    console.log('err')
+  }
 
   return {
     props: {
