@@ -1,36 +1,43 @@
-import { useState } from 'react'
-import { GetServerSidePropsContext } from 'next'
+import { useEffect, useState } from 'react'
 import { BsArrowLeftShort } from 'react-icons/bs'
 import { FiPlus } from 'react-icons/fi'
 import Link from 'next/link'
+import { db } from 'lib/firebase'
+import { doc, onSnapshot } from 'firebase/firestore'
 
-import { getList, updateList } from 'services/api'
 import ColorBanner from 'components/ColorBanner'
+import { useRouter } from 'next/router'
+import SpinningCircle from 'components/SpinningCircle'
 
-type ColorListProps = {
-  list: List
-}
 
-export default function ColorList({ list }: ColorListProps) {
-  const [colors, setColors] = useState<Color[]>(list.colors);
+export default function ColorList() {
+  const [prevColors, setPrevColors] = useState<string[]>([]);
+  const [colors, setColors] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  function changeColor(index: number, code: string) {
+  const router = useRouter()
+  const { slug } = router.query
+
+  useEffect(() =>{
+    if (slug) {
+      onSnapshot(doc(db, "lists", slug as string), (doc) => {
+        setPrevColors(doc.data()?.colors)
+      });
+    }
+  }, [slug])
+
+  function changeColor(index: number, target: string) {
     const newColors = colors
-    newColors[index].code = code
+    newColors[index] = target
     setColors(newColors)
   }
 
   function submitColors() {
-    const arr = colors.map((color) => (
-      color.code
-    ))
-    updateList(list.slug, arr)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err))
+    const arr = prevColors.concat(colors)
   }
 
   function addColor() {
-    setColors(colors.concat([{code: "#111"}]))
+    setColors(colors.concat(["#111"]))
   }
 
   function removeColor(index: number) {
@@ -48,7 +55,7 @@ export default function ColorList({ list }: ColorListProps) {
     >
       <nav className='w-full p-4'>
         <Link href="/">
-          <a href="">
+          <a href="" className='w-auto'>
             <BsArrowLeftShort size={40}/>
           </a>
         </Link>
@@ -58,25 +65,52 @@ export default function ColorList({ list }: ColorListProps) {
           text-2xl
         '
       >
-        {list.slug}
+        {slug}
       </h1>
-      <div className='w-full max-w-lg'>
-        {colors.map((col) => {
-          index++
-          return <ColorBanner key={index} index={index} color={col} changeColor={changeColor} removeColorCallback={removeColor}/>
-        })}
+      <div className='w-full max-w-lg flex flex-col gap-8'>
+        <div>
+          {prevColors.map((col) => {
+            index++
+            return <ColorBanner key={index} index={index} color={col} changeColor={changeColor} removeColorCallback={removeColor} disabled/>
+          })}
+        </div>
+        <div className=' border-t border-gray-300'>
+          {colors.map((col) => {
+            index++
+            return <ColorBanner key={index} index={index} color={col} changeColor={changeColor} removeColorCallback={removeColor}/>
+          })}
+        </div>
       </div>
 
-      <button
-        className='
-          uppercase tracking-wide
-          border-2 border-black rounded
-          bg-green-300 px-3 py-1
-          w-4/5 max-w-md
-        '
-        onClick={submitColors}>
-        save
-      </button>
+      {loading ?
+        <button
+          className='
+            font-semibold
+            rounded-md
+            bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700
+            px-4 py-2
+            w-4/5 max-w-xs
+            text-white flex justify-center items-center
+          '
+        >
+          <SpinningCircle /> <span>loading...</span>
+        </button>
+        :
+        <button
+          className='
+            font-semibold
+            rounded-md
+            bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700
+            px-4 py-2
+            w-4/5 max-w-xs
+            text-white flex justify-center items-center
+          '
+          onClick={submitColors}
+        >
+          save
+        </button>
+      }
+
       <button onClick={addColor}
         className='
           absolute bottom-8 right-8
@@ -89,24 +123,5 @@ export default function ColorList({ list }: ColorListProps) {
       </button>
     </div>
   )
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const {slug} = context.query
-
-  let res = {}
-  let data
-  try {
-    const res = await getList(String(slug))
-    data = res.data
-  } catch {
-    console.log('err')
-  }
-
-  return {
-    props: {
-      list: data || {slug, colors: []}
-    }
-  }
 }
 
