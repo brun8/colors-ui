@@ -76,7 +76,6 @@ export default function ColorList() {
         className='
           text-2xl font-bold
         '
-        onClick={() => console.log(localColors)}
       >
         {slug}
       </h1>

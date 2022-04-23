@@ -29,7 +29,6 @@ export default function ColorBanner({ color, index, changeColor, removeColorCall
         w-full relative
       '
       style={{backgroundColor: bg}}
-      onClick={() => console.log()}
     >
       <div className='w-12'></div>
       <div className="bg-white flex justify-center">
