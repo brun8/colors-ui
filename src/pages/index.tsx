@@ -8,6 +8,11 @@ const Home: NextPage = () => {
   const inputRef = useRef<HTMLInputElement>(null!)
   const router = useRouter()
 
+  function handleInput() {
+    const value = inputRef.current.value.toLowerCase().replaceAll(' ', '-')
+    inputRef.current.value = value
+  }
+
   return (
     <div className='flex flex-col items-center h-screen md:p-20 p-12'>
       <form
@@ -18,7 +23,7 @@ const Home: NextPage = () => {
         '
         onSubmit={(e) => {
           e.preventDefault()
-          router.push(`${inputRef.current.value}`)
+          router.push(`${inputRef.current.value.toLowerCase().replaceAll(' ','-')}`)
         }}
       >
         <div className='relative mx-auto w-4/5 max-w-lg flex items-center'>
@@ -32,6 +37,7 @@ const Home: NextPage = () => {
               w-full
             '
             placeholder='some-random-list'
+            onChange={handleInput}
             ref={inputRef}
           />
           <GoSearch className='absolute right-3 text-slate-700'/>
