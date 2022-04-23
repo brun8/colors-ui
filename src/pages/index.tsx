@@ -38,7 +38,8 @@ const Home: NextPage = () => {
         </div>
         <button
           type="submit"
-          className='px-4 py-2 w-4/5 max-w-sm
+          className='
+            px-4 py-2 w-4/5 max-w-sm
             border-slate-800
             rounded-md
             transition-colors duration-200
