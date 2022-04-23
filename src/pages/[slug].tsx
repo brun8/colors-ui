@@ -122,6 +122,7 @@ export default function ColorList() {
             className='
               font-semibold
               rounded-md
+              transition-colors duration-200
               bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700
               px-4 py-2
               w-4/5 max-w-xs
@@ -136,6 +137,7 @@ export default function ColorList() {
             className='
               font-semibold
               rounded-md
+              transition-colors duration-200
               bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700
               px-4 py-2
               w-4/5 max-w-xs
