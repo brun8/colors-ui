@@ -5,5 +5,5 @@ type Color = {
 
 type List = {
   slug: string
-  colors: Color[]
+  colors: string[]
 }

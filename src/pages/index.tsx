@@ -31,6 +31,7 @@ const Home: NextPage = () => {
               outline-slate-600
               w-full
             '
+            placeholder='some-random-list'
             ref={inputRef}
           />
           <GoSearch className='absolute right-3 text-slate-700'/>
