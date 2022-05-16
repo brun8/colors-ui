@@ -4,6 +4,7 @@ import {HiPlus} from 'react-icons/hi'
 
 import { supabase } from 'services/supabase'
 import Loading from "components/Loading";
+import ColorBanner from "components/ColorBanner";
 
 
 export default function ListPage() {
@@ -94,7 +95,7 @@ export default function ListPage() {
               <hr className="border-t border-gray-400 w-full" />
               <div className="w-full max-w-lg">
                 {clientColors.map((color, index) => (
-                  <div key={index} className="h-32" style={{backgroundColor: color}}/>
+                  <ColorBanner key={index} color={color}/>
                 ))}
               </div>
               <div
