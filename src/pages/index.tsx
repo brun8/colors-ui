@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import { BaseSyntheticEvent, useRef } from 'react'
 import { useRouter } from 'next/router'
-import { supabase } from 'services/supabase'
+
 
 const Home: NextPage = () => {
   const router = useRouter()
@@ -12,19 +12,9 @@ const Home: NextPage = () => {
     router.push(`${inputRef.current?.value.toLowerCase()}`)
   }
 
-  async function cruzeiro() {
-    const {data, error} = await supabase
-      .from('lists')
-      .update({ colors: ['#155aa2', "#fdfdfd", "#111222"] })
-      .eq("slug", "cruzeiro")
-
-    console.log(data, error)
-  }
-
   return (
     <div className='flex flex-col gap-2 items-center'>
       <div className='lg:mt-32 mt-12' />
-      <div onClick={cruzeiro}>aqui</div>
       <form className='w-5/6 max-w-md flex flex-col gap-4'
         onSubmit={handleSubmit}
       >
@@ -46,7 +36,8 @@ const Home: NextPage = () => {
         />
         <button
           type='submit'
-          className='px-4 py-2 w-4/5 mx-auto
+          className='
+            px-4 py-2 w-4/5 mx-auto
             bg-indigo-400 hover:bg-indigo-500 active:bg-indigo-600
             rounded-md font-bold
             text-white

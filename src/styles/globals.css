@@ -8,7 +8,7 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  @apply min-h-screen antialiased bg-gray-800 text-gray-100;
+  @apply antialiased bg-gray-800 text-gray-100;
 }
 
 a {
