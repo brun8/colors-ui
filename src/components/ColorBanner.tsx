@@ -1,13 +1,18 @@
 import { useRef, useState } from "react"
-import { HiX } from 'react-icons/hi'
+import { XIcon } from '@heroicons/react/solid'
+import DialogModal from 'components/DialogModal'
+
 
 type ColorBannerProps = {
+  index: number
   color: string
   disabled?: boolean
   removeColorCallback?: () => void
+  onUpdate: (index: number, color: string) => void
 }
 
-export default function ColorBanner({ color, disabled, removeColorCallback }: ColorBannerProps) {
+export default function ColorBanner({ index, color, disabled, removeColorCallback, onUpdate }: ColorBannerProps) {
+  const [modalVisible, setModalVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null)
   const [background, setBackground] = useState<string>(color);
 
@@ -37,6 +42,7 @@ export default function ColorBanner({ color, disabled, removeColorCallback }: Co
             ref={inputRef}
             className="px-2 py-1 text-gray-900 bg-white text-center w-32"
             onClick={handleCopy}
+            onInput={() => onUpdate(index, inputRef.current?.value!)}
           />
           <div
             className="
@@ -45,10 +51,15 @@ export default function ColorBanner({ color, disabled, removeColorCallback }: Co
               w-6 h-6 rounded-full
               flex items-center justify-center
             "
-            onClick={removeColorCallback}
+            onClick={() => setModalVisible(true)}
           >
-            <HiX size={16}/>
+            <XIcon className="w-4 h-4"/>
           </div>
+          <DialogModal
+            isOpen={modalVisible}
+            onClose={() => setModalVisible(false)}
+            onConfirm={removeColorCallback!}
+          />
         </>
       }
     </div>

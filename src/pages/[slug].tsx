@@ -1,10 +1,11 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import {HiPlus} from 'react-icons/hi'
+import { PlusIcon } from '@heroicons/react/solid'
 
 import { supabase } from 'services/supabase'
-import Loading from "components/Loading";
-import ColorBanner from "components/ColorBanner";
+import Loading from "components/Loading"
+import ColorBanner from "components/ColorBanner"
+import StaticColorBanner from "components/StaticColorBanner"
 
 
 export default function ListPage() {
@@ -54,9 +55,17 @@ export default function ListPage() {
     setClientColors(clientColors.concat('#111'))
   }
 
+  // TODO: quando deleta a lista fica bugada
   function removeColor(index: number) {
+    console.log('removing color: ', index)
     const arr = clientColors.slice(0, index).concat(clientColors.slice(index+1, clientColors.length))
     console.log(arr)
+    //setClientColors(arr)
+  }
+
+  function updateColor(index: number, color:string) {
+    clientColors[index] = color
+    setClientColors(clientColors)
   }
 
   async function saveList() {
@@ -74,7 +83,7 @@ export default function ListPage() {
     <div className="flex flex-col lg:gap-16 gap-8 items-center flex-1">
       <div className="mt-12"/>
 
-      <h1 className="font-bold text-2xl">
+      <h1 className="font-bold text-2xl" onClick={() => console.log(clientColors)}>
         {slug}
       </h1>
 
@@ -87,7 +96,7 @@ export default function ListPage() {
           <div className="w-full max-w-lg">
             { serverColors.length !== 0 ?
               serverColors.map((color, index) => (
-                <ColorBanner key={index} color={color} disabled />
+                <StaticColorBanner key={index} color={color} />
               ))
               :
               <div className="text-center text-lg font-semibold">list empty</div>
@@ -98,7 +107,13 @@ export default function ListPage() {
               <hr className="border-t border-gray-400 w-full" />
               <div className="w-full max-w-lg">
                 {clientColors.map((color, index) => (
-                  <ColorBanner key={index} color={color} removeColorCallback={() => removeColor(index)}/>
+                  <ColorBanner
+                    key={index}
+                    index={index}
+                    color={color}
+                    removeColorCallback={() => removeColor(index)}
+                    onUpdate={updateColor}
+                  />
                 ))}
               </div>
               <div
@@ -125,7 +140,8 @@ export default function ListPage() {
             "
             onClick={addColor}
           >
-            <HiPlus size={24}/>
+            <PlusIcon className="h-6 w-6"/>
+
           </div>
 
         </div>
