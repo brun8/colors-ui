@@ -17,18 +17,16 @@ export default function ListPage() {
 
   useEffect(() => {
     async function fetchColors() {
-      const {status, data} = await supabase
+      const {data} = await supabase
         .from('lists')
         .select('colors')
         .eq('slug', slug)
         .single()
 
-      console.log(data, status)
       if (data) {
         setServerColors(data.colors)
       } else {
-        const {status} = await supabase.from('lists').insert({slug: slug, colors: []})
-        console.log(status)
+        await supabase.from('lists').insert({slug: slug, colors: []})
       }
 
       setLoading(false)
@@ -54,6 +52,11 @@ export default function ListPage() {
 
   function addColor() {
     setClientColors(clientColors.concat('#111'))
+  }
+
+  function removeColor(index: number) {
+    const arr = clientColors.slice(0, index).concat(clientColors.slice(index+1, clientColors.length))
+    console.log(arr)
   }
 
   async function saveList() {
@@ -84,7 +87,7 @@ export default function ListPage() {
           <div className="w-full max-w-lg">
             { serverColors.length !== 0 ?
               serverColors.map((color, index) => (
-                <div key={index} className="h-32" style={{backgroundColor: color}}/>
+                <ColorBanner key={index} color={color} disabled />
               ))
               :
               <div className="text-center text-lg font-semibold">list empty</div>
@@ -95,7 +98,7 @@ export default function ListPage() {
               <hr className="border-t border-gray-400 w-full" />
               <div className="w-full max-w-lg">
                 {clientColors.map((color, index) => (
-                  <ColorBanner key={index} color={color}/>
+                  <ColorBanner key={index} color={color} removeColorCallback={() => removeColor(index)}/>
                 ))}
               </div>
               <div
