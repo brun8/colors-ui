@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import { BaseSyntheticEvent, useRef } from 'react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 
 const Home: NextPage = () => {
@@ -14,6 +15,11 @@ const Home: NextPage = () => {
 
   return (
     <div className='flex flex-col gap-2 items-center'>
+      <Head>
+        <title>
+          Home - Colors
+        </title>
+      </Head>
       <div className='lg:mt-32 mt-12' />
       <form className='w-5/6 max-w-md flex flex-col gap-4'
         onSubmit={handleSubmit}

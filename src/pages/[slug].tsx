@@ -6,6 +6,7 @@ import Loading from "components/Loading"
 import ColorBanner from "components/ColorBanner"
 import StaticColorBanner from "components/StaticColorBanner"
 import DialogModal from "components/DialogModal"
+import Head from "next/head"
 
 
 export default function ListPage() {
@@ -82,6 +83,11 @@ export default function ListPage() {
 
   return (
     <div className="flex flex-col lg:gap-16 gap-8 items-center flex-1">
+      <Head>
+        <title>
+          {slug} - Colors
+        </title>
+      </Head>
       <div className="mt-12"/>
 
       <h1 className="font-bold text-2xl" onClick={() => console.log(clientColors)}>
