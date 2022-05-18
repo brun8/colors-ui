@@ -1,24 +1,26 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { PlusIcon } from '@heroicons/react/solid'
 
-import { supabase } from 'services/supabase'
+import { sb } from 'services/supabase'
 import Loading from "components/Loading"
 import ColorBanner from "components/ColorBanner"
 import StaticColorBanner from "components/StaticColorBanner"
+import DialogModal from "components/DialogModal"
 
 
 export default function ListPage() {
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [serverColors, setServerColors] = useState<string[]>([]);
   const [clientColors, setClientColors] = useState<string[]>([]);
+  const [clearListModal, setClearListModal] = useState(false);
 
   const router = useRouter()
   const slug = router.query.slug as string
 
   useEffect(() => {
     async function fetchColors() {
-      const {data} = await supabase
+      const {data} = await sb
         .from('lists')
         .select('colors')
         .eq('slug', slug)
@@ -27,7 +29,7 @@ export default function ListPage() {
       if (data) {
         setServerColors(data.colors)
       } else {
-        await supabase.from('lists').insert({slug: slug, colors: []})
+        await sb.from('lists').insert({slug: slug, colors: []})
       }
 
       setLoading(false)
@@ -36,7 +38,7 @@ export default function ListPage() {
     if (slug) {
       fetchColors()
 
-      const subscription = supabase
+      const subscription = sb
         .from(`lists:slug=eq.${slug}`)
         .on('*', payload => {
           setLoading(true)
@@ -55,21 +57,18 @@ export default function ListPage() {
     setClientColors(clientColors.concat('#111'))
   }
 
-  // TODO: quando deleta a lista fica bugada
-  function removeColor(index: number) {
-    console.log('removing color: ', index)
-    const arr = clientColors.slice(0, index).concat(clientColors.slice(index+1, clientColors.length))
-    console.log(arr)
-    //setClientColors(arr)
-  }
-
   function updateColor(index: number, color:string) {
     clientColors[index] = color
     setClientColors(clientColors)
   }
 
+  function clearList() {
+    setClientColors([])
+  }
+
   async function saveList() {
-    const { status } = await supabase
+    setUploading(true)
+    const { status } = await sb
       .from('lists')
       .update({ colors: serverColors.concat(clientColors) })
       .match({ slug: slug })
@@ -77,6 +76,8 @@ export default function ListPage() {
     if (status === 200) {
       setClientColors([])
     }
+
+    setUploading(false)
   }
 
   return (
@@ -111,39 +112,77 @@ export default function ListPage() {
                     key={index}
                     index={index}
                     color={color}
-                    removeColorCallback={() => removeColor(index)}
                     onUpdate={updateColor}
                   />
                 ))}
               </div>
-              <div
-                className="
-                  px-4 py-2 w-4/5 mx-auto
-                  bg-indigo-400 hover:bg-indigo-500 active:bg-indigo-600
-                  rounded-md font-bold
-                  text-white
-                  text-center
-                "
-                onClick={saveList}
-              >
-                save
-              </div>
+
             </>
           }
-          <div
-            className="
-              w-12 h-12 rounded-full
-              flex justify-center items-center
-              bg-green-400
-              text-gray-800
-              absolute right-10 bottom-10
-            "
-            onClick={addColor}
-          >
-            <PlusIcon className="h-6 w-6"/>
+          <div className="flex flex-col gap-6 w-full">
+            <button
+              type="button"
+              className="
+                flex-1 text-center
+                inline-flex items-center justify-center
+                px-4 py-2 border border-green-500
+                shadow-sm text-sm font-medium
+                rounded-md text-gray-800 bg-green-400 hover:bg-green-500
+                focus:outline-none focus:ring-2
+                focus:ring-offset-2 focus:ring-indigo-500
+              "
+              onClick={addColor}
+            >
+              Add
+            </button>
 
+            { clientColors.length !== 0 &&
+              <div className="flex flex-wrap gap-4">
+                <DialogModal
+                  isOpen={clearListModal}
+                  onClose={() => setClearListModal(false)}
+                  title="Clear list?"
+                  onConfirm={clearList}
+                />
+
+                <button
+                  type="button"
+                  className="
+                    flex-1
+                    inline-flex items-center justify-center
+                    px-4 py-2 border border-transparent
+                    text-sm font-medium rounded-md text-indigo-700
+                    bg-indigo-100 hover:bg-indigo-200 focus:outline-none
+                    focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+                  "
+                  onClick={() => setClearListModal(true)}
+                >
+                  Clear
+                </button>
+                <button
+                  type="button"
+                  className="
+                    flex-1
+                    inline-flex items-center justify-center
+                    px-3 py-2
+                    border border-transparent
+                    text-sm leading-4
+                    font-medium rounded-md shadow-sm
+                    text-white bg-indigo-600 hover:bg-indigo-700
+                    focus:outline-none focus:ring-2
+                    focus:ring-offset-2 focus:ring-indigo-500
+                  "
+                  onClick={saveList}
+                >
+                { uploading ?
+                  <Loading />
+                  :
+                  <>Save</>
+                }
+                </button>
+              </div>
+            }
           </div>
-
         </div>
       }
     </div>

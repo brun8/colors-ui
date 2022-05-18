@@ -5,11 +5,11 @@ type ModalProps = {
   isOpen: boolean
   onClose: () => void
   onConfirm: () => void
-  title?: string
+  title: string
   description?: string
 }
 
-export default function DialogModal({ isOpen, onClose, onConfirm }: ModalProps) {
+export default function DialogModal({ isOpen, onClose, onConfirm, title }: ModalProps) {
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -42,7 +42,7 @@ export default function DialogModal({ isOpen, onClose, onConfirm }: ModalProps) 
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
-                    Delete Color?
+                    {title}
                   </Dialog.Title>
                   <div className="inline-flex gap-2 justify-end w-full">
                     <button
