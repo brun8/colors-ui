@@ -10,6 +10,7 @@ specifiers:
   autoprefixer: ^10.4.7
   eslint: 8.15.0
   eslint-config-next: 12.1.6
+  jotai: ^1.6.7
   next: 12.1.6
   postcss: ^8.4.13
   react: 18.1.0
@@ -21,6 +22,7 @@ dependencies:
   '@headlessui/react': 1.6.1_ef5jwxihqo6n7gxfmzogljlgcm
   '@heroicons/react': 1.0.6_react@18.1.0
   '@supabase/supabase-js': 1.35.3
+  jotai: 1.6.7_react@18.1.0
   next: 12.1.6_ef5jwxihqo6n7gxfmzogljlgcm
   react: 18.1.0
   react-dom: 18.1.0_react@18.1.0
@@ -1487,6 +1489,43 @@ packages:
   /isexe/2.0.0:
     resolution: {integrity: sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=}
     dev: true
+
+  /jotai/1.6.7_react@18.1.0:
+    resolution: {integrity: sha512-MxAm86FYHm6asU3O1hbTKOWpPMP5oI8zNlgFRpZBB85cX79psF2eRb7ZqdGewOgYUUUKAlzZ+sH0IM7Pea6MkA==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@babel/core': '*'
+      '@babel/template': '*'
+      '@urql/core': '*'
+      immer: '*'
+      optics-ts: '*'
+      react: '>=16.8'
+      react-query: '*'
+      valtio: '*'
+      wonka: '*'
+      xstate: '*'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
+      '@urql/core':
+        optional: true
+      immer:
+        optional: true
+      optics-ts:
+        optional: true
+      react-query:
+        optional: true
+      valtio:
+        optional: true
+      wonka:
+        optional: true
+      xstate:
+        optional: true
+    dependencies:
+      react: 18.1.0
+    dev: false
 
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}

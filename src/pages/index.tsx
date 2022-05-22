@@ -20,7 +20,9 @@ const Home: NextPage = () => {
           Home - Colors
         </title>
       </Head>
+
       <div className='lg:mt-32 mt-12' />
+
       <form className='w-5/6 max-w-md flex flex-col gap-4'
         onSubmit={handleSubmit}
       >
